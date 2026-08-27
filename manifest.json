@@ -27,9 +27,11 @@
         }
     ],
 
-    "action": {
-        "default_popup": "src/popup/popup.html"
+    "action": {},
+
+    "background": {
+        "service_worker": "src/background/background.js"
     },
 
-    "permissions": ["storage"]
+    "permissions": ["storage", "tabs", "activeTab"]
 }
