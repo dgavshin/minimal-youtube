@@ -1,9 +1,13 @@
-// Toolbar tile only appears on YouTube tabs. On click, toggle enabled state
-// in storage, swap the action icon to grayscale (or back to color), and reload
-// the active YouTube tab so the content script re-runs against the new state.
+// Toolbar tile is shown only for YouTube tabs, and only because the content
+// script tells us so (chrome.runtime.onMessage below). The background never
+// reads tab.url — that triggers Safari's "would like to access <host>" prompt
+// for every non-YouTube tab the user touches.
+//
+// On click, toggle enabled state in storage, swap the action icon to grayscale
+// (or back to color), and reload the active YouTube tab so the content script
+// re-runs against the new state.
 
 const ICON = "assets/128x128.png";
-const isYouTube = (url) => /^https:\/\/([a-z0-9-]+\.)*youtube\.com\//.test(url || "");
 
 async function getIcon(grayscale) {
     const blob = await fetch(chrome.runtime.getURL(ICON)).then((r) => r.blob());
@@ -26,22 +30,18 @@ async function syncIcon(tabId, enabled) {
     await chrome.action.setIcon({ tabId, imageData: data });
 }
 
-function syncTile(tabId, url) {
-    chrome.action[isYouTube(url) ? "show" : "hide"](tabId);
-}
-
-chrome.tabs.onUpdated.addListener((tabId, change) => {
-    if (change.url) syncTile(tabId, change.url);
-});
-
-chrome.tabs.onActivated.addListener(async ({ tabId }) => {
-    const tab = await chrome.tabs.get(tabId).catch(() => null);
-    if (!tab || !isYouTube(tab.url)) return;
-    const { enabled = true } = await chrome.storage.local.get("enabled");
-    syncIcon(tabId, enabled).catch(() => {});
+chrome.runtime.onMessage.addListener((msg, sender) => {
+    if (msg?.type === "minimal-yt-loaded" && sender.tab?.id != null) {
+        chrome.action.show(sender.tab.id);
+        chrome.storage.local.get("enabled", ({ enabled = true } = {}) => {
+            syncIcon(sender.tab.id, enabled).catch(() => {});
+        });
+    }
+    return false;
 });
 
 chrome.action.onClicked.addListener(async (tab) => {
+    if (tab?.id == null) return;
     const { enabled = true } = await chrome.storage.local.get("enabled");
     const next = !enabled;
     await chrome.storage.local.set({ enabled: next });

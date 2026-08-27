@@ -1,6 +1,12 @@
 /* This runs after a web page loads */
 let oldHref = document.location.href;
 
+// Tell the background script this tab is YouTube so it can show the toolbar tile.
+// Sending this from the content script (scoped to *.youtube.com) avoids the
+// background ever needing to read tab.url, which is what triggers Safari's
+// "would like to access <host>" prompts on unrelated sites.
+chrome.runtime.sendMessage({ type: "minimal-yt-loaded" }).catch(() => {});
+
 chrome.storage.local.get("enabled", (data) => {
     const enabled = typeof data.enabled === "undefined" ? true : !!data.enabled;
     if (enabled) {
