@@ -3,8 +3,6 @@
   <h1>Minimal YouTube</h1>
 </div>
 
-> **This fork adds Safari Web Extension support.** The original extension files (manifest.json + src/) are cross-browser; the Safari build lives in [`safari/`](./safari). See [Installation (Safari)](#installation-safari) below.
-
 Minimal YouTube is an extension that replaces the YouTube UI with a minimal design containing no recommendations, shorts, or distractions.
 
 <p align="center">
@@ -23,10 +21,6 @@ Minimal YouTube is an extension that replaces the YouTube UI with a minimal desi
       src="https://img.shields.io/badge/Firefox-141e24.svg?&style=for-the-badge&logo=firefox-browser&logoColor=white"
     />
   </a>
-  <img
-    alt="Safari"
-    src="https://img.shields.io/badge/Safari-141e24.svg?&style=for-the-badge&logo=safari&logoColor=white"
-  />
 
 </p>
 
@@ -48,17 +42,6 @@ Minimal YouTube is an extension that replaces the YouTube UI with a minimal desi
 - Click the button **_Load Temporary Add-on..._**
 - In the window that pops up, **select the folder that contains the downloaded extension**, then **click _ok_**.
 - **Done!** A new extension called _Minimal Youtube_ should have appeared.
-
-## Installation (Safari)
-Requires macOS and Xcode 14 or later.
-
-- **Clone this fork** and `cd` into it.
-- **Open** `safari/Minimal YouTube/Minimal YouTube.xcodeproj` in Xcode.
-- In Xcode, set your **development team** under Signing & Capabilities for both the `Minimal YouTube` and `Minimal YouTube Extension` targets (free Apple ID works for local use).
-- Press **⌘R** to build and run. The host app launches, registers the extension, and Safari picks it up.
-- Open **Safari → Settings → Extensions** and enable **Minimal YouTube** for `youtube.com`.
-
-The Safari target reuses the same `manifest.json` and `src/` from the repo root — no source-code duplication. The Xcode project was generated with `xcrun safari-web-extension-converter` and includes both the Swift host app and the embedded Web Extension.
 
 
 

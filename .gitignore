@@ -2,3 +2,10 @@
 *.zip
 *.xpi
 web-ext-artifacts/
+
+# Xcode / Safari
+safari/**/build/
+safari/**/DerivedData/
+safari/**/*.xcuserstate
+safari/**/*.xcuserdatad/
+safari/**/*.xcworkspace/xcuserdata/
